@@ -3,10 +3,10 @@ from typing import Annotated
 from fastapi import FastAPI, Depends
 from fastapi.middleware.gzip import GZipMiddleware
 
-from backend.auth.jwt_bearer import get_current_user
-from backend.auth.router import router as auth_router
-from backend.http_client import IMEICheckClient
-from backend.models import IMEI
+from api.auth.jwt_bearer import get_current_user
+from api.auth.router import router as auth_router
+from api.http_client import IMEICheckClient
+from api.models import IMEI
 from db.user import User
 from settings import Settings
 
