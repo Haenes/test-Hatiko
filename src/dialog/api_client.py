@@ -1,10 +1,9 @@
-import os
 from aiohttp import ClientSession
-from dotenv import load_dotenv
+
+from settings import Settings
 
 
-load_dotenv()
-API_BASE_URL = os.environ.get("API_BASE_URL")
+API_BASE_URL = Settings.API_BASE_URL
 
 
 async def register(

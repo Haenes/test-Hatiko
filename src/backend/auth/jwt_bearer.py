@@ -1,5 +1,3 @@
-from os import environ
-from dotenv import load_dotenv
 from typing import Annotated, NoReturn
 
 from fastapi import Depends, HTTPException
@@ -14,13 +12,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.auth.models import TokenData
 from db.engine import get_async_session
 from db.user import User, get_user
+from settings import Settings
 
 
-load_dotenv()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
-SECRET = environ.get("JWT_SECRET")
+SECRET = Settings.JWT_SECRET
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

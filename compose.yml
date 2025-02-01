@@ -2,23 +2,19 @@ services:
     bot:
         container_name: test-bot
         build: .
-        volumes:
-            - .:/app
-        command: sh -c "cd src && python bot.py"
+        command: sh -c "python src/bot.py"
         env_file:
             - .env
         depends_on:
-            - backend
+            - api
         restart: unless-stopped
     
-    backend:
-        container_name: test-backend
+    api:
+        container_name: test-api
         build: .
-        entrypoint:  sh src/backend_entrypoint.sh
+        entrypoint:  sh src/api_entrypoint.sh
         ports:
             - "8000:8000"
-        volumes:
-            - .:/app
         env_file:
             - .env
         depends_on:

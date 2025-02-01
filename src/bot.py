@@ -1,7 +1,5 @@
-import os
 import asyncio
 import logging
-from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
@@ -16,19 +14,22 @@ from db.engine import async_session_maker
 from dialog.dialogs import start, auth, login, register, imei
 from middlewares.whitelist import WhiteListMiddleware
 from commands import router
+from settings import Settings
 
 
 async def main():
-    load_dotenv()
-    BOT_TOKEN = os.environ.get("BOT_TOKEN")
-    API_BASE_URL = os.environ.get("API_BASE_URL")
+    BOT_TOKEN = Settings.BOT_TOKEN
+    API_BASE_URL = Settings.API_BASE_URL
 
     logging.basicConfig(level=logging.INFO)
 
     redis = Redis(host="redis", decode_responses=True)
 
     bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode="HTML"))
-    dp = Dispatcher(storage=RedisStorage(redis, DefaultKeyBuilder(with_destiny=True)))
+    dp = Dispatcher(storage=RedisStorage(
+        redis,
+        DefaultKeyBuilder(with_destiny=True)
+    ))
     dp.update.outer_middleware(WhiteListMiddleware())
 
     dp.include_routers(router, start, auth, login, register, imei)

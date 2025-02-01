@@ -17,12 +17,12 @@ auth = Dialog(
         Group(
             Start(
                 text=Const("Вход"),
-                id="login",
+                id="start_login",
                 state=LoginSG.password
             ),
             Start(
                 text=Const("Регистрация"),
-                id="register",
+                id="start_register",
                 state=RegisterSG.password
             ),
             width=2,

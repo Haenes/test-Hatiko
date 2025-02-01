@@ -69,9 +69,9 @@ async def check_IMEI(
     redis: Redis,
     **kwargs
 ) -> dict[str, str]:
-    imei = dialog_manager.find("imei").get_value()
+    imei: str = dialog_manager.find("imei").get_value()
 
-    if not isValidIMEI(int(imei)):
+    if not imei.isdigit() or not isValidIMEI(int(imei)):
         return {"error": "Неверный IMEI."}
 
     api_token = await redis.get(dialog_manager.event.from_user.id)

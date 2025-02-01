@@ -5,7 +5,6 @@ from aiogram.filters.command import Command
 from aiogram_dialog import DialogManager, StartMode
 
 from redis.asyncio import Redis
-from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from dialog.states import StartSG, AuthSG, ImeiSG
 from dialog.utils import get_token
@@ -32,7 +31,6 @@ async def cmd_start(message: Message, dialog_manager: DialogManager):
 async def cmd_auth(
     message: Message,
     redis: Redis,
-    db_sessionmaker: async_sessionmaker,
     dialog_manager: DialogManager
 ):
     if await get_token(redis, message.from_user.id):
@@ -44,7 +42,6 @@ async def cmd_auth(
 async def cmd_imei(
     message: Message,
     redis: Redis,
-    db_sessionmaker: async_sessionmaker,
     dialog_manager: DialogManager
 ):
     if await get_token(redis, message.from_user.id):

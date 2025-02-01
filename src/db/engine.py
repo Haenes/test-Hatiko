@@ -1,6 +1,4 @@
-import os
 from typing import AsyncGenerator
-from dotenv import load_dotenv
 
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
@@ -8,10 +6,10 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession
 )
 
+from settings import Settings
 
-load_dotenv()
 
-engine = create_async_engine(url=os.environ.get("DB_URI"), echo=True)
+engine = create_async_engine(url=Settings.DB_URI)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 

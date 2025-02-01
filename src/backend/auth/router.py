@@ -25,7 +25,15 @@ async def register(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: Annotated[AsyncSession, Depends(get_async_session)],
     redis: Annotated[Redis, Depends(get_redis_client)],
-) -> Token:
+) -> Token | str:
+
+    if await authenticate_user(
+        session,
+        form_data.username,
+        form_data.password
+    ):
+        return "Вы уже зарегистрированы."
+
     user = User(
         user_id=int(form_data.username),
         hashed_password=hash_password(form_data.password)
