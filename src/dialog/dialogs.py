@@ -13,15 +13,15 @@ start = Dialog(
 
 auth = Dialog(
     Window(
-        Const("Что хотите сделать?"),
+        Const("Ваш выбор?"),
         Group(
             Start(
-                text=Const("Войти"),
+                text=Const("Вход"),
                 id="login",
                 state=LoginSG.password
             ),
             Start(
-                text=Const("Зарегистрироваться"),
+                text=Const("Регистрация"),
                 id="register",
                 state=RegisterSG.password
             ),
@@ -75,8 +75,9 @@ imei = Dialog(
     Window(
         Const(
             """\
-                Введите IMEI для проверки.\
-                \nПосле ввода, это сообщение появится снова возможна небольшая задержка:
+                Введите IMEI для проверки.
+                \nПосле ввода, это сообщение останется,\
+                \nвам нужно будет немного подождать:
             """
         ),
         TextInput(id="imei", on_success=handle_input),

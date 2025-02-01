@@ -11,7 +11,7 @@ async def register(
     session: ClientSession,
     email: str,
     password: str
-) -> dict[str, str]:
+) -> dict[str, str] | str:
     data = {"username": email, "password": password}
 
     async with session.post("/auth/register", data=data) as r:
@@ -27,7 +27,7 @@ async def get_token(
     session: ClientSession,
     email: str,
     password: str
-) -> dict[str, str]:
+) -> dict[str, str] | str:
     data = {"username": email, "password": password}
 
     async with session.post("/auth/token", data=data) as r:

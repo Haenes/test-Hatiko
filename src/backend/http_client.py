@@ -13,7 +13,7 @@ class HTTPClient:
 
 
 class IMEICheckClient(HTTPClient):
-    async def check(self, imei: str):
+    async def check(self, imei: str) -> dict[str, str | dict]:
         async with self._session.post(
             url="/v1/checks",
             json={"deviceId": imei, "serviceId": 12}

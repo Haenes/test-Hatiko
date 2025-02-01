@@ -36,6 +36,6 @@ app.include_router(auth_router)
 async def check_imei(
     imei: IMEI,
     current_user: Annotated[User, Depends(get_current_user)]
-) -> dict:
+) -> dict[str, str | dict]:
     results = await imei_api.check(imei.imei)
     return results

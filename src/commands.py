@@ -47,6 +47,6 @@ async def cmd_imei(
     db_sessionmaker: async_sessionmaker,
     dialog_manager: DialogManager
 ):
-    if not await get_token(redis, message.from_user.id):
-        return await message.answer("Вы не вошли, используйте команду /auth.")
-    await dialog_manager.start(ImeiSG.input, mode=StartMode.RESET_STACK)
+    if await get_token(redis, message.from_user.id):
+        return await dialog_manager.start(ImeiSG.input, mode=StartMode.RESET_STACK)
+    await message.answer("Вы не вошли, используйте команду /auth.")

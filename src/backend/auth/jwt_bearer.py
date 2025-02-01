@@ -1,6 +1,6 @@
 from os import environ
 from dotenv import load_dotenv
-from typing import Annotated
+from typing import Annotated, NoReturn
 
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
@@ -13,11 +13,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.auth.models import TokenData
 from db.engine import get_async_session
-from db.user import get_user
+from db.user import User, get_user
 
 
 load_dotenv()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 SECRET = environ.get("JWT_SECRET")
@@ -26,11 +26,11 @@ ALGORITHM = "HS256"
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def hash_password(password: str):
+def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def verify_password(plain_password: str, hashed_password: str):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
@@ -38,17 +38,17 @@ async def authenticate_user(
     session: AsyncSession,
     username: str,
     password: str
-):
+) -> User | None:
     user = await get_user(int(username), session)
 
     if user is None:
-        return False
+        return None
     if not verify_password(password, user.hashed_password):
-        return False
+        return None
     return user
 
 
-def create_access_token(data: dict):
+def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     return jwt.encode(to_encode, SECRET, ALGORITHM)
 
@@ -56,7 +56,7 @@ def create_access_token(data: dict):
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     session: Annotated[AsyncSession, Depends(get_async_session)]
-):
+) -> User | NoReturn:
     error_401 = HTTPException(
         status_code=401,
         detail="Ошибка валидации данных",

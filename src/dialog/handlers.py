@@ -15,7 +15,7 @@ async def handle_input(
     text: ManagedTextInput,
     manager: DialogManager,
     input: str
-):
+) -> None:
     manager.show_mode = ShowMode.EDIT
     await message.delete()
     await manager.next()
@@ -26,7 +26,7 @@ async def register_user(
     session: ClientSession,
     redis: Redis,
     **kwargs
-):
+) -> dict[str, str]:
     username = dialog_manager.event.from_user.id
     password = dialog_manager.find("password").get_value()
 
@@ -47,7 +47,7 @@ async def login_user(
     session: ClientSession,
     redis: Redis,
     **kwargs
-):
+) -> dict[str, str]:
     username = dialog_manager.event.from_user.id
     password = dialog_manager.find("password").get_value()
 
@@ -68,16 +68,21 @@ async def check_IMEI(
     session: ClientSession,
     redis: Redis,
     **kwargs
-):
+) -> dict[str, str]:
     imei = dialog_manager.find("imei").get_value()
+
     if not isValidIMEI(int(imei)):
         return {"error": "Неверный IMEI."}
 
-    token = await redis.get(dialog_manager.event.from_user.id)
-    results = await check_imei(session, token, imei)
+    api_token = await redis.get(dialog_manager.event.from_user.id)
+    results = await check_imei(session, api_token, imei)
 
     if results["status"] == "successful":
-        return {"result": results["properties"]}
+        return {
+            "result": "".join(
+                f"{k}: {v}\n" for k, v in results["properties"].items()
+            )
+        }
     elif results["status"] == "unsuccessful":
         return {"error": "Возникла ошибка у стороннего сервиса!"}
     return {"error": "Возникла ошибка!"}
